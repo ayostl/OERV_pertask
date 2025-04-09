@@ -20,4 +20,4 @@
 
 本机环境介绍：
 
-![本机环境介绍](image/本机环境介绍.png "本机环境介绍")
+[![本机环境介绍](image/本机环境介绍.png "本机环境介绍")](https://github.com/ayostl/OERV_pertask/tree/main/images/本机环境.png)
