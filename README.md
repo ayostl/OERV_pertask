@@ -4,7 +4,7 @@
 
 ## 有关详细内容请阅读相关材料
 
-> OERV 实习生帮助文档[github连接](https://github.com/openeuler-riscv/oerv-team/blob/main/Intern/guide.md)
+> OERV 实习生帮助文档 [github 连接](https://github.com/openeuler-riscv/oerv-team/blob/main/Intern/guide.md "OERV 实习生指南")
 
 ## pretask（省流版）
 
@@ -21,3 +21,53 @@
 本机环境介绍：
 
 [![本机环境介绍](images/system.png "本机环境介绍")](https://github.com/ayostl/OERV_pertask/tree/main/images/system.png)
+
+由于个人原因暂时只能使用 Windows 系统，所以我们需要使用 [QEMU for Windows](https://qemu.weilnetz.de/w64/2019/ "点击跳转到 QEMU 下载页") 进行 QEMU 模拟器的安装
+
+> 参考资料：[初始 openEuler（一）](https://www.openeuler.org/zh/blog/traffic_millions/2020-03-27-qemu.html "初试 openEuler（一）：windows 下使用 qemu 安装 openEuler ")
+
+安装过程：
+
+1. 下载 [QEMU for Windows](https://qemu.weilnetz.de/w64/qemu-w64-setup-20250326.exe "点击下载 QEMU for Windows 20250326") 并解压到本地目录中，通过 exe 可执行文件进行安装
+2. 下载 [openEuler 25.03](https://www.openeuler.org/zh/download/#openEuler%2025.03 "点击跳转到 openEuler 25.03 下载页") 选择 RISC-V 架构的云计算中的 qcow2.xz 虚拟机镜像文件
+3. 编辑系统环境变量 PATH ，确保 QEMU 能够在终端内执行
+4. 创建一个文件夹 **openEuler_RISCV** 用于保存虚拟机文件，并将 **qcow2.xz** 解压到该文件夹中
+5. 进入 QEMU 安装目录，并在其 share 子文件夹中找到 **edk2-riscv-code.fd** 文件并一同复制到该目录中
+6. 打开终端（ PowerShell ），输入以下命令启动虚拟机：
+
+```PowerShell
+qemu-system-riscv64 `
+  -m 4096 `
+  -cpu rv64 `
+  -smp 4 `
+  -M virt `
+  -bios edk2-riscv-code.fd `
+  -hda openEuler-25.03-riscv64.qcow2 `
+  -serial vc:800x600
+```
+
+启动后出现以下界面：
+[![运行错误](images/error1.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/error1.png)
+
+又找了一份文档，尝试以下脚本：
+
+```sh
+@echo off
+chcp 65001
+set vcpu=8
+set memory=8
+set drive=openEuler-22.09-riscv64-qemu.qcow2
+set fw=fw_payload_oe_qemuvirt.elf
+set ssh_port=12055
+
+echo :: Starting VM...
+echo :: Using following configuration
+
+echo vCPU Cores: %vcpu%
+echo Memory: %memory%G
+echo Disk: %drive%
+echo SSH Port: %ssh_port%
+
+set path=D:\qemu;%PATH%
+qemu-system-riscv64  -nographic -machine virt  -smp %vcpu% -m %memory%G  -kernel "%fw%"  -bios none  -drive file=%drive%,format=qcow2,id=hd0  -device virtio-vga -device virtio-blk-device,drive=hd0  -device virtio-net-device,netdev=usernet  -netdev user,id=usernet,hostfwd=tcp::"%ssh_port%"-:22  -device qemu-xhci -usb -device usb-kbd -device usb-tablet  -append "root=/dev/vda1 rw console=ttyS0 swiotlb=1 loglevel=3 systemd.default_timeout_start_sec=600 selinux=0 highres=off mem=512M earlycon"
+```
