@@ -9,9 +9,13 @@
 ## pretask（省流版）
 
 > pretask 的目的是帮助实习生一起搭建工作环境，熟悉 oerv 的工作流程和合作方式。 pretask 分为三个步骤：
+>
 > 任务一：通过 QEMU 仿真 RISC-V 环境并启动 openEuler RISC-V 系统，设法输出 fastfetch 结果并截图提交
+>
 > 任务二：在 openEuler RISC-V 系统上通过 obs 命令行工具 osc，从源代码构建 RISC-V 版本的 rpm 包，比如 pcre2。（提示首先需要在 openEuler的 OBS什么是 OBS？ 上注册账号 <https://build.tarsier-infra.isrc.ac.cn）>
+>
 > 任务三：尝试使用 qemu user & nspawn 或者 docker 加速完成任务二
+>
 > 任务完成的方式为在本仓库提交 PR，并在 PR 的 Conversation 中附上任务完成截图，在 Intern/intern_message.md 的 实习生信息 下中加入自己的信息（pretask 考核的一部分）。这个阶段希望实习生养成积极提问和正确提问的习惯，并且构建属于自己的工作流和环境。
 
 ## 任务一
@@ -42,21 +46,21 @@ qemu-system-riscv64 `
   -smp 4 `
   -M virt `
   -bios edk2-riscv-code.fd `
-  -hda openEuler-25.03-riscv64.qcow2 `
+  -hda openEuler-24.03-LTS-SP1-riscv64.qcow2 `
   -serial vc:800x600
 ```
 
 启动后出现以下界面：
-[![运行错误](images/error1.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/error1.png)
+[![第一个错误](images/error1.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/error1.png)
 
 又找了一份文档，尝试以下脚本：
 
 ```sh
 @echo off
 chcp 65001
-set vcpu=8
-set memory=8
-set drive=openEuler-22.09-riscv64-qemu.qcow2
+set vcpu=4
+set memory=4
+set drive=openEuler-22.09-riscv64-qemu-xfce.qcow2
 set fw=fw_payload_oe_qemuvirt.elf
 set ssh_port=12055
 
@@ -68,6 +72,32 @@ echo Memory: %memory%G
 echo Disk: %drive%
 echo SSH Port: %ssh_port%
 
-set path=D:\qemu;%PATH%
-qemu-system-riscv64  -nographic -machine virt  -smp %vcpu% -m %memory%G  -kernel "%fw%"  -bios none  -drive file=%drive%,format=qcow2,id=hd0  -device virtio-vga -device virtio-blk-device,drive=hd0  -device virtio-net-device,netdev=usernet  -netdev user,id=usernet,hostfwd=tcp::"%ssh_port%"-:22  -device qemu-xhci -usb -device usb-kbd -device usb-tablet  -append "root=/dev/vda1 rw console=ttyS0 swiotlb=1 loglevel=3 systemd.default_timeout_start_sec=600 selinux=0 highres=off mem=512M earlycon"
+set path="F:\qemu";%PATH%
+qemu-system-riscv64 `
+  -nographic `
+  -machine virt `
+  -smp %vcpu% `
+  -m %memory%G `
+  -kernel "%fw%" `
+  -bios none `
+  -drive file=%drive%,format=qcow2,id=hd0 `
+  -device virtio-vga `
+  -device virtio-blk-device,drive=hd0 `
+  -device virtio-net-device,netdev=usernet `
+  -netdev user,id=usernet,hostfwd=tcp::"%ssh_port%"-:22 `
+  -device qemu-xhci `
+  -usb `
+  -device usb-kbd `
+  -device usb-tablet `
+  -append "root=/dev/vda1 rw console=ttyS0 swiotlb=1 loglevel=3 systemd.default_timeout_start_sec=600 selinux=0 highres=off mem=512M earlycon"
 ```
+
+尝试从源码构建：
+
+> [QEMU Wiki](https://wiki.qemu.org/Hosts/W32 "点击跳转到 QEMU Wiki")
+
+通过 Wiki 上的帮助文档一步步执行，其中 python 包中缺少一些依赖可以从该链接下载，以完成构建 [mysy2.packages 仓库](https://packages.msys2.org/ "点击跳转到 mysy2.packages 仓库")
+
+但是我遇到了以下下错误：
+
+[![第二个错误](images/error2.png)](ttps://github.com/ayostl/OERV_pertask/tree/main/images/error2.png)
