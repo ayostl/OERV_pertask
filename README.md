@@ -100,10 +100,18 @@ qemu-system-riscv64 `
 
 但是我遇到了以下下错误：
 
-[![第二个错误](images/error2.png)](ttps://github.com/ayostl/OERV_pertask/tree/main/images/error2.png)
+[![第二个错误](images/error2.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/error2.png)
 
 暂时拼劲全力无法解决（日后再去解决吧），转而使用 Wsl 方案，虚拟机看起来太抽象了，还是 Wsl 好一点
 
 仓皇建立了一个 wsl 虚拟机，试图用 wsl 来安装 qemu 模拟 riscv 环境
 
-[![openSUSE](images/openSUSE.png)](ttps://github.com/ayostl/OERV_pertask/tree/main/images/openSUSE.png)
+[![openSUSE](images/openSUSE.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/openSUSE.png "openSUSE WSL2")
+
+重新从源码构建 qemu ,但是无法编译成功，悲），以后有时间再研究吧
+
+重新安装了一个[![Ubuntu](images/Ubuntu.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/Ubuntu.png "Ubuntu WSL2")
+
+重新构建依赖并尝试从源码构建 qemu
+
+> [QEMU Wiki](https://wiki.qemu.org/Hosts/Linux "点击跳转到 QEMU Wiki")
