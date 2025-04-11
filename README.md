@@ -26,7 +26,7 @@
 
 [![本机环境介绍](images/system.png "本机环境介绍")](https://github.com/ayostl/OERV_pertask/tree/main/images/system.png)
 
-由于个人原因暂时只能使用 Windows 系统，所以我们需要使用 [QEMU for Windows](https://qemu.weilnetz.de/w64/2019/ "点击跳转到 QEMU 下载页") 进行 QEMU 模拟器的安装
+由于本地声卡无Linux驱动暂时只能使用 Windows 系统，所以我们需要使用 [QEMU for Windows](https://qemu.weilnetz.de/w64/2019/ "点击跳转到 QEMU 下载页") 进行 QEMU 模拟器的安装
 
 > 参考资料：[初始 openEuler（一）](https://www.openeuler.org/zh/blog/traffic_millions/2020-03-27-qemu.html "初试 openEuler（一）：windows 下使用 qemu 安装 openEuler ")
 
@@ -101,3 +101,9 @@ qemu-system-riscv64 `
 但是我遇到了以下下错误：
 
 [![第二个错误](images/error2.png)](ttps://github.com/ayostl/OERV_pertask/tree/main/images/error2.png)
+
+暂时拼劲全力无法解决（日后再去解决吧），转而使用 Wsl 方案，虚拟机看起来太抽象了，还是 Wsl 好一点
+
+仓皇建立了一个 wsl 虚拟机，试图用 wsl 来安装 qemu 模拟 riscv 环境
+
+[![openSUSE](images/openSUSE.png)](ttps://github.com/ayostl/OERV_pertask/tree/main/images/openSUSE.png)
