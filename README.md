@@ -166,8 +166,57 @@ qemu-system-riscv64 \
 
 第一步先在 openEuler 上安装 obs 命令行工具
 
-> 参考资料：[如何在 openEuler 上使用 OBS 命令行工具](https://www.openeuler.org/zh/blog/fuchangjie/2020-03-26-how-to-OBS.html)
+> 参考资料：[如何在 openEuler 上使用 OBS 命令行工具](https://www.openeuler.org/zh/blog/fuchangjie/2020-03-26-how-to-OBS.html "如何在 openEuler 上使用 OBS 命令行工具") & [openSUSE Wiki](https://en.opensuse.org/openSUSE:Build_Service_Tutorial "点击打开 openSUSE Wiki")
 
 注册一个 obs 账号后在本地构建一个 obs 的工作主目录，并通过 osc checkout home:username 命令把远程家目录和本地工作区建立连接
 
+> 注意，这一步一定要去注册 [obs 国服](https://build.tarsier-infra.isrc.ac.cn "点击打开 obs 仓库（国服）")，不要注册 [obs 外服](https://build.opensuse.org/ "点击打开 obs 仓库（外服）")，不然你会一个仓库都 search 不到，我看的 Wiki 都是外服的链接，此处耽误2小时，希望大家引以为戒
+
+开始我还寻思直接去找一下仓库，结果打不开，但是在 osc 中使用正常
+
 [![在建立项目时服务器崩了](images/break.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/break.png "在建立项目时服务器崩了")
+
+以下是我在 openEuler 构建 pcre2 包的过程：
+
+```sh
+# 进入 obs 工作主目录
+osc checkout home:ayostl # 建立本地工作区
+osc search pcre2 # 搜索 pcre2 包
+osc co openEuler:24.03:SP1:Everything pcre2openSUSE:Factory pcre2 # 从源代码构建 pcre2 包（可以改成自己搜索到的仓库）
+cd .../pcre2 # 进入 pcre2 目录
+osc up -S # 上传 pcre2 包
+rm -f _service;for file in `ls | grep -v .osc`;do new_file=${file##*:};mv $file $new_file;done
+osc addremove * # 重命名源文件，然后将重命名后的源文件添加到OBS暂存中
+osc ci -m "update pcre2" --noservice # 提交 pcre2包
+osc repos # 查看仓库
+osc bulid 
+```
+
+构建完成，共耗时1934s
+
+[![构建完成](images/pretask2.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/pretask2.png "构建完成")
+
+任务二完成！
+
+## 任务三
+
+> 任务三：尝试使用 qemu user & nspawn 或者 docker 加速完成任务二
+> 参考资料[Ubuntu OBS Wiki](https://www.xiexianbin.cn/linux/ubuntu/open-build-service/index.html "点击打开 Ubuntu OBS Wiki")
+
+开始在 Ubuntu 上安装 osc 命令行工具，但是遇到以下问题，似乎是因为python3.4以后就不支持 imp 这个模块了，我的系统 python 是3.12.0，所以无法运行。但是我在寻找一圈无果后，发现可能是因为缺少对应的依赖而导致错误运行并非版本问题，然后使用修复依赖
+
+```sh
+sudo apt --fix-broken install
+```
+
+现在 osc 可以正常使用了
+
+
+[![osc 缺少imp](images/error3.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/error3.png "osc 缺少imp")
+
+在构建的过程中遇到了以下错误，试图尝试找到该问题的解决方案
+
+[![unkown option](images/error4.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/error4.png "unkown option")
+
+找了4个小时无果，打算到时候再跟大家一起研究这些问题，先把任务三的工作完成了，我想到可能是因为 Ubuntu 24,04 LTS 的 obs 包版本过低，无法执行这些编译命令，所以我又回到 openSUSE 上重新构建了 pcre2 包，结果成功构建
+
