@@ -240,34 +240,34 @@ sudo apt --fix-broken install
 
 ### OERV 相关
 
-[OERV 实习生指南](https://github.com/openeuler-riscv/oerv-team/blob/main/Intern/guide.md)
+- [OERV 实习生指南](https://github.com/openeuler-riscv/oerv-team/blob/main/Intern/guide.md)
 
 ### 初始 openEuler 相关
 
-[初试 openEuler（一）：windows 下使用 qemu 安装 openEuler](https://www.openeuler.org/zh/blog/traffic_millions/2020-03-27-qemu.html)
+- [初试 openEuler（一）：windows 下使用 qemu 安装 openEuler](https://www.openeuler.org/zh/blog/traffic_millions/2020-03-27-qemu.html)
 
 ### QEMU 相关
 
-[QEMU 下载页](https://qemu.weilnetz.de/w64/2019/)
-[QEMU for Windows 20250326 下载](https://qemu.weilnetz.de/w64/qemu-w64-setup-20250326.exe)
-[QEMU Wiki](https://wiki.qemu.org/Hosts/W32)
-[mysy2.packages 仓库](https://packages.msys2.org/)
-[Ubuntu Boards documentation](https://canonical-ubuntu-boards.readthedocs-hosted.com/en/latest/how-to/qemu-riscv/)
+- [QEMU 下载页](https://qemu.weilnetz.de/w64/2019/)
+- [QEMU for Windows 20250326 下载](https://qemu.weilnetz.de/w64/qemu-w64-setup-20250326.exe)
+- [QEMU Wiki](https://wiki.qemu.org/Hosts/W32)
+- [mysy2.packages 仓库](https://packages.msys2.org/)
+- [Ubuntu Boards documentation](https://canonical-ubuntu-boards.readthedocs-hosted.com/en/latest/how-to/qemu-riscv/)
 
 ### openEuler 下载及文档相关
 
-[openEuler 25.03 下载页](https://www.openeuler.org/zh/download/#openEuler%2025.03)
-[openEuler 帐号清单](https://docs.openeuler.org/zh/docs/24.03_LTS_SP1/docs/Releasenotes/%E5%B8%90%E5%8F%B7%E6%B8%85%E5%8D%95.html)
+- [openEuler 25.03 下载页](https://www.openeuler.org/zh/download/#openEuler%2025.03)
+- [openEuler 帐号清单](https://docs.openeuler.org/zh/docs/24.03_LTS_SP1/docs/Releasenotes/%E5%B8%90%E5%8F%B7%E6%B8%85%E5%8D%95.html)
 
 ### OBS 相关
 
-[如何在 openEuler 上使用 OBS 命令行工具](https://www.openeuler.org/zh/blog/fuchangjie/2020-03-26-how-to-OBS.html)
-[openSUSE Wiki](https://en.opensuse.org/openSUSE:Build_Service_Tutorial)
-[obs 仓库（国服）](https://build.tarsier-infra.isrc.ac.cn)
-[obs 仓库（外服）](https://build.opensuse.org/)
-[Ubuntu OBS Wiki](https://www.xiexianbin.cn/linux/ubuntu/open-build-service/index.html)
+- [如何在 openEuler 上使用 OBS 命令行工具](https://www.openeuler.org/zh/blog/fuchangjie/2020-03-26-how-to-OBS.html)
+- [openSUSE Wiki](https://en.opensuse.org/openSUSE:Build_Service_Tutorial)
+- [obs 仓库（国服）](https://build.tarsier-infra.isrc.ac.cn)
+- [obs 仓库（外服）](https://build.opensuse.org/)
+- [Ubuntu OBS Wiki](https://www.xiexianbin.cn/linux/ubuntu/open-build-service/index.html)
 
 ### 其他人的 pretask PR（感谢）
 
-[张天泽](https://github.com/openeuler-riscv/oerv-team/pull/1760)
-[ccrysisa](https://ccrysisa.github.io/posts/oerv-pretask/)
+- [张天泽](https://github.com/openeuler-riscv/oerv-team/pull/1760)
+- [ccrysisa](https://ccrysisa.github.io/posts/oerv-pretask/)
