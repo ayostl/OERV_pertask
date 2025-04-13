@@ -3,7 +3,8 @@
 ## 声明
 
 本文档仅作为 OERV 实习生的工作前准备，不涉及任何 OERV 相关的工作内容。
-本人的安装过程有些许曲折，看本文档的人在以后做该项目实验时，个人建议直接使用已经成熟的体系，比如 Ubuntu 22.04 LTS 或者 ArchLinux ，这样可以避免一些不必要的麻烦。
+
+本人的安装过程有些许曲折，看本文档的人在以后做该项目实验时，个人建议直接使用已经成熟的体系，比如 ArchLinux ，这样可以避免一些不必要的麻烦（ Ubuntu 和 openSUSE 都踩坑了，Arch 居然是最强的！）
 祝你工作顺利！
 
 ---
@@ -32,7 +33,7 @@
 
 [![本机环境介绍](images/system.png "本机环境介绍")](https://github.com/ayostl/OERV_pertask/tree/main/images/system.png)
 
-由于本地声卡无 Linux 版本的驱动暂时只能使用 Windows 系统（等有钱了再买一台工作机吧），所以我们需要使用 [QEMU for Windows](https://qemu.weilnetz.de/w64/2019/ "点击跳转到 QEMU 下载页") 进行 QEMU 模拟器的安装
+由于本地声卡无 Linux 版本驱动暂时只能使用 Windows 系统（等有钱了再买一台工作机吧），所以我们需要使用 [QEMU for Windows](https://qemu.weilnetz.de/w64/2019/ "点击跳转到 QEMU 下载页") 进行 QEMU 模拟器的安装
 
 > 参考资料：[初始 openEuler（一）](https://www.openeuler.org/zh/blog/traffic_millions/2020-03-27-qemu.html "初试 openEuler（一）：windows 下使用 qemu 安装 openEuler ")
 
@@ -58,6 +59,8 @@ qemu-system-riscv64 `
 
 启动后出现以下界面：
 [![第一个错误](images/error1.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/error1.png)
+
+猜测可能是因为没有uefi启动，但是没找到解决方案
 
 又找了一份文档，尝试以下脚本：
 
@@ -114,9 +117,9 @@ qemu-system-riscv64 `
 
 [![openSUSE](images/openSUSE.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/openSUSE.png "openSUSE WSL2")
 
-重新从源码构建 qemu ,但是无法编译成功，悲），以后有时间再研究吧
+重新从源码构建 qemu ,但是无法编译成功，在第一个错误的那个启动界面无限卡死，悲），以后有时间再研究吧
 
-重新安装了一个[![Ubuntu](images/Ubuntu.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/Ubuntu.png "Ubuntu WSL2")
+重新安装了一个 Ubuntu [![Ubuntu](images/Ubuntu.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/Ubuntu.png "Ubuntu WSL2")
 
 使用 apt 命令安装 qemu 及其相关依赖
 
@@ -182,9 +185,10 @@ qemu-system-riscv64 \
 # 进入 obs 工作主目录
 osc checkout home:ayostl # 建立本地工作区
 osc search pcre2 # 搜索 pcre2 包
-osc co openEuler:24.03:SP1:Everything pcre2openSUSE:Factory pcre2 # 从源代码构建 pcre2 包（可以改成自己搜索到的仓库）
+osc co openEuler:24.03:SP1:Everything pcre2openSUSE:Factory pcre2
+# 从源代码构建 pcre2 包（可以改成自己搜索到的仓库）
 cd .../pcre2 # 进入 pcre2 目录
-osc up -S # 上传 pcre2 包
+osc up -S # 根据_service文件从云端部署到本地
 rm -f _service;for file in `ls | grep -v .osc`;do new_file=${file##*:};mv $file $new_file;done
 osc addremove * # 重命名源文件，然后将重命名后的源文件添加到OBS暂存中
 osc ci -m "update pcre2" --noservice # 提交 pcre2包
@@ -192,7 +196,7 @@ osc repos # 查看仓库
 osc bulid 
 ```
 
-构建完成，共耗时1934s
+构建完成，共耗时1934s（ cpu 太弱啦 `.....((/- -)/`）
 
 [![构建完成](images/pretask2.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/pretask2.png "构建完成")
 
@@ -218,6 +222,52 @@ sudo apt --fix-broken install
 
 [![unkown option](images/error4.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/error4.png "unkown option")
 
-找了4个小时无果，打算到时候再跟大家一起研究这些问题，先把任务三的工作完成了，我想到可能是因为 Ubuntu 24,04 LTS 的 obs 包版本过低，无法执行这些编译命令，所以我又回到 openSUSE 上重新构建了 pcre2 包，这次可以构建了（折磨我一下午，郁闷╥﹏╥...），但仍出现以下错误，试图解决
+找了4个小时无果，打算到时候再跟大家一起研究这些问题，先把任务三的工作完成了，我想到可能是因为 Ubuntu 24,04 LTS 的 obs 包版本过低，无法执行这些编译命令，所以我又回到 openSUSE 上重新构建了 pcre2 包，这次可以构建了（折磨我一下午，郁闷`╥﹏╥...`），但仍出现以下错误，试图解决
 
 [![异常退出](images/error5.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/error5.png "异常退出")
+
+构建太多次给 /var/tmp 干爆仓了，手动清理一下继续构建
+
+在连续构建几个仓库都出现错误，后来发现可能是交换空间内存太小，重新设置了一下交换空间内存，问题解决（个人建议，如果 search 到的仓库无法构建一定要看一下 log 中的问题提示，比如依赖不全，或者空间大小不够）
+
+构建共耗时1053s，使用 chroot 加速构建可以显著提升构建速度
+
+[![pretask3](images/pretask3.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/pretask3.png "pretask3")
+
+任务三完成！
+
+## 参考资料合集
+
+### OERV 相关
+
+[OERV 实习生指南](https://github.com/openeuler-riscv/oerv-team/blob/main/Intern/guide.md)
+
+### 初始 openEuler 相关
+
+[初试 openEuler（一）：windows 下使用 qemu 安装 openEuler](https://www.openeuler.org/zh/blog/traffic_millions/2020-03-27-qemu.html)
+
+### QEMU 相关
+
+[QEMU 下载页](https://qemu.weilnetz.de/w64/2019/)
+[QEMU for Windows 20250326 下载](https://qemu.weilnetz.de/w64/qemu-w64-setup-20250326.exe)
+[QEMU Wiki](https://wiki.qemu.org/Hosts/W32)
+[mysy2.packages 仓库](https://packages.msys2.org/)
+[Ubuntu Boards documentation](https://canonical-ubuntu-boards.readthedocs-hosted.com/en/latest/how-to/qemu-riscv/)
+
+### openEuler 下载及文档相关
+
+[openEuler 25.03 下载页](https://www.openeuler.org/zh/download/#openEuler%2025.03)
+[openEuler 帐号清单](https://docs.openeuler.org/zh/docs/24.03_LTS_SP1/docs/Releasenotes/%E5%B8%90%E5%8F%B7%E6%B8%85%E5%8D%95.html)
+
+### OBS 相关
+
+[如何在 openEuler 上使用 OBS 命令行工具](https://www.openeuler.org/zh/blog/fuchangjie/2020-03-26-how-to-OBS.html)
+[openSUSE Wiki](https://en.opensuse.org/openSUSE:Build_Service_Tutorial)
+[obs 仓库（国服）](https://build.tarsier-infra.isrc.ac.cn)
+[obs 仓库（外服）](https://build.opensuse.org/)
+[Ubuntu OBS Wiki](https://www.xiexianbin.cn/linux/ubuntu/open-build-service/index.html)
+
+### 其他人的 pretask PR（感谢）
+
+[张天泽](https://github.com/openeuler-riscv/oerv-team/pull/1760)
+[ccrysisa](https://ccrysisa.github.io/posts/oerv-pretask/)
