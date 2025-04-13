@@ -218,5 +218,6 @@ sudo apt --fix-broken install
 
 [![unkown option](images/error4.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/error4.png "unkown option")
 
-找了4个小时无果，打算到时候再跟大家一起研究这些问题，先把任务三的工作完成了，我想到可能是因为 Ubuntu 24,04 LTS 的 obs 包版本过低，无法执行这些编译命令，所以我又回到 openSUSE 上重新构建了 pcre2 包，结果成功构建
+找了4个小时无果，打算到时候再跟大家一起研究这些问题，先把任务三的工作完成了，我想到可能是因为 Ubuntu 24,04 LTS 的 obs 包版本过低，无法执行这些编译命令，所以我又回到 openSUSE 上重新构建了 pcre2 包，这次可以构建了（折磨我一下午，郁闷╥﹏╥...），但仍出现以下错误，试图解决
 
+[![异常退出](images/error5.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/error5.png "异常退出")
