@@ -215,7 +215,6 @@ sudo apt --fix-broken install
 
 现在 osc 可以正常使用了
 
-
 [![osc 缺少imp](images/error3.png)](https://github.com/ayostl/OERV_pertask/tree/main/images/error3.png "osc 缺少imp")
 
 在构建的过程中遇到了以下错误，试图尝试找到该问题的解决方案
