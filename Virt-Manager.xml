@@ -1,19 +1,19 @@
-<os firmware="efi">
+  <os firmware="efi">
     <type arch="riscv64" machine="virt">hvm</type>
-    <firmware>     
+    <firmware>
       <feature enabled="no" name="enrolled-keys"/>
       <feature enabled="yes" name="secure-boot"/>
     </firmware>
-    <loader readonly="yes" secure="yes" type="pflash" format="raw">/nix/store/235drl4bkz2nag5p5kwwvldy63gqw15r-qemu-9.2.2/share/qemu/edk2-riscv-code.fd</loader>
-    <nvram template="/nix/store/lc26z5hk1z6bf87c3cg55bnb9xmgclz6-qemu-9.2.2/share/qemu/edk2-riscv-vars.fd" templateFormat="raw" format="raw">/var/lib/libvirt/qemu/nvram/openEuler_VARS.fd</nvram>
+    <loader readonly="yes" secure="yes" type="pflash" format="raw">/home/ayostl/ISO/RISCV_VIRT_CODE.fd</loader>
+    <nvram template="/home/ayostl/ISO/RISCV_VIRT_VARS.fd" templateFormat="raw" format="raw">/var/lib/libvirt/qemu/nvram/openEuler_VARS.fd</nvram>
     <boot dev="hd"/>
-</os>
+  </os>
 
 
     <emulator>/etc/profiles/per-user/ayostl/bin/qemu-system-riscv64</emulator>
     <disk type="file" device="disk">
       <driver name="qemu" type="qcow2" discard="unmap"/>
-      <source file="/var/lib/libvirt/images/openEuler.qcow2"/>
+      <source file="/home/ayostl/ISO/openEuler-25.03-riscv64.qcow2"/>
       <target dev="vda" bus="virtio"/>
       <address type="pci" domain="0x0000" bus="0x04" slot="0x00" function="0x0"/>
     </disk>
