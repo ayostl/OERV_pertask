@@ -1,0 +1,85 @@
+digraph ClearLinux_Automation_Flow {
+    rankdir=LR;
+    node [shape=rectangle, style=filled, fillcolor=lightblue];
+
+    subgraph cluster_build {
+        label="构建与发布阶段";
+        color=gray;
+
+        mixer_tools [label="mixer-tools
+软件更新混合器"];
+        autospec [label="autospec
+RPM 打包自动化"];
+        unbundle [label="unbundle
+Bundle 依赖解析器"];
+        clr_bundles [label="clr-bundles
+Bundle 定义"];
+
+        mixer_tools -> autospec [label="生成包"];
+        autospec -> unbundle [label="解决依赖"];
+        unbundle -> clr_bundles [label="验证 bundle 定义"];
+    }
+
+    subgraph cluster_deploy {
+        label="部署阶段";
+        color=gray;
+
+        dockerfiles [label="dockerfiles
+基于 ClearLinux 的容器"];
+        docker_brew [label="docker-brew-clearlinux
+Dockerhub 快照"];
+        cloud_native [label="cloud-native-setup
+Kubernetes 自动化"];
+        micro_config [label="micro-config-drive
+Cloud-init 实现"];
+
+        clr_bundles -> dockerfiles [label="构建容器镜像"];
+        dockerfiles -> docker_brew [label="推送到 Dockerhub"];
+        dockerfiles -> cloud_native [label="部署 Kubernetes"];
+        cloud_native -> micro_config [label="配置实例"];
+    }
+
+    subgraph cluster_operation {
+        label="运维阶段";
+        color=gray;
+
+        swupd_client [label="swupd-client
+软件更新客户端"];
+        swupd_overdue [label="swupd-overdue
+启动时更新检查"];
+        clr_service [label="clr-service-restart
+自动重启服务"];
+        telemetry_client [label="telemetrics-client
+客户端遥测"];
+        telemetry_backend [label="telemetrics-backend
+遥测收集器"];
+        tallow [label="tallow
+SSH 暴力破解防护"];
+
+        swupd_client -> swupd_overdue [label="检查更新"];
+        swupd_client -> clr_service [label="触发服务重启"];
+        swupd_client -> telemetry_client [label="报告更新状态"];
+        telemetry_client -> telemetry_backend [label="发送指标"];
+        tallow -> telemetry_client [label="报告安全事件"];
+    }
+
+    subgraph cluster_security {
+        label="安全与合规阶段";
+        color=gray;
+
+        cve_check [label="cve-check-tool
+CVE 漏洞扫描"];
+        kernel_check [label="kernel-config-checker
+内核安全检查"];
+        clrtrust [label="clrtrust
+TLS 信任存储管理"];
+
+        cve_check -> kernel_check [label="验证内核配置"];
+        kernel_check -> clrtrust [label="更新安全证书"];
+    }
+
+    # 跨阶段连接
+    mixer_tools -> swupd_client [label="提供更新内容"];
+    autospec -> cve_check [label="扫描包漏洞"];
+    docker_brew -> cloud_native [label="提供基础镜像"];
+}
