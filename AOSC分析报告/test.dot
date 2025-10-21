@@ -1,0 +1,106 @@
+digraph AOSC_Package_Management_Graph {
+    rankdir=TB;
+    node [shape=box, style=filled];
+    
+    // 1. 构建环节：源码→.deb包
+    subgraph cluster_build {
+        label="1. 构建环节：源码→.deb包";
+        color=lightblue;
+        node [fillcolor=lightcyan];
+        
+        aosc_os_abbs [label="aosc-os-abbs\n(构建元数据：.ab脚本/补丁/依赖)"];
+        acbs [label="ACBS\n(构建树管理/依赖协调)"];
+        autobuild4 [label="autobuild4\n(自动化编译/打包生成.deb)"];
+        ciel [label="ciel\n(容器化构建环境隔离)"];
+        buildit [label="buildit\n(远程批量构建自动化)"];
+        find_deps [label="find-deps\n(ELF动态依赖检测)"];
+        
+        // 核心流程（实线）
+        aosc_os_abbs -> acbs [label="提供构建元数据"];
+        acbs -> autobuild4 [label="调用执行构建"];
+        autobuild4 -> repo [label="输出.deb包→上传至仓库"];
+        
+        // 辅助工具（虚线）
+        ciel -> autobuild4 [label="提供标准化环境" style=dashed];
+        buildit -> acbs [label="触发远程构建" style=dashed];
+        aosc_os_abbs -> find_deps [label="提供ELF文件→依赖检测" style=dashed];
+        find_deps -> autobuild4 [label="输出依赖列表→写入.deb元数据" style=dashed];
+    }
+
+    // 2. 用户端管理：用户操作入口
+    subgraph cluster_user {
+        label="2. 用户端管理：用户操作入口";
+        color=lightgreen;
+        node [fillcolor=lightyellow];
+        
+        oma [label="oma\n(主包管理器：安装/更新/卸载)"];
+        dpkg [label="dpkg\n(底层.deb安装引擎)"];
+        oma_apt [label="oma-apt\n(封装libapt-pkg→仓库交互)"];
+        oma_apt_sources [label="oma-apt-sources-lists\n(APT源管理/优先级配置)"];
+        oma_inquire [label="oma-inquire\n(交互式命令提示)"];
+        
+        // 核心流程（实线）
+        oma -> dpkg [label="调用底层安装"];
+        oma -> oma_apt [label="触发→仓库索引拉取/签名验证"];
+        oma -> oma_inquire [label="触发→交互式提示"];
+        
+        // 辅助工具（虚线）
+        oma_apt_sources -> oma [label="提供APT源列表" style=dashed];
+    }
+
+    // 3. 依赖与元数据：保障兼容性
+    subgraph cluster_dep_meta {
+        label="3. 依赖与元数据：保障兼容性";
+        color=orange;
+        node [fillcolor=gold];
+        
+        p_vector_rs [label="p-vector-rs\n(生成APT仓库索引：Packages/InRelease)"];
+        dpkgrepo_meta [label="dpkgrepo-meta\n(查询元数据：版本对比/架构匹配)"];
+        aosc_os_feature [label="aosc-os-feature-data\n(核心依赖防护：防止误删关键包)"];
+        
+        // 核心流程（实线）
+        p_vector_rs -> oma_apt [label="提供索引→用于依赖解析"];
+        dpkgrepo_meta -> oma [label="提供查询结果→依赖链生成"];
+        
+        // 辅助工具（虚线）
+        aosc_os_feature -> oma [label="提供防护规则→校验核心包操作" style=dashed];
+    }
+
+    // 4. 仓库分发：包存储与同步
+    subgraph cluster_repo {
+        label="4. 仓库分发：包存储与同步";
+        color=purple;
+        node [fillcolor=plum];
+        
+        repo [label="AOSC软件仓库\n(存储预编译.deb包)"];
+        aosc_repo_data [label="aosc-os-repository-data\n(仓库元数据：镜像地址/分支/组件)"];
+        aosc_mirror [label="aosc-mirror\n(私有仓库同步工具)"];
+        repo_refresh [label="repo-refresh\n(仓库自动刷新服务)"];
+        
+        // 核心流程（实线）
+        aosc_repo_data -> oma_apt_sources [label="提供官方源地址"];
+        repo -> oma [label="提供.deb包→下载"];
+        
+        // 辅助工具（虚线）
+        aosc_mirror -> repo [label="同步官方仓库→搭建私有源" style=dashed];
+        repo_refresh -> repo [label="定时更新→确保包最新" style=dashed];
+        p_vector_rs -> repo [label="生成索引→存入仓库" style=dashed];
+    }
+
+    // 5. 系统部署：初始化系统包环境
+    subgraph cluster_deploy {
+        label="5. 系统部署：初始化系统包环境";
+        color=red;
+        node [fillcolor=salmon];
+        
+        deploykit_backend [label="deploykit-backend\n(安装器后端：部署基础包)"];
+        aoscbootstrap [label="aoscbootstrap\n(系统初始化：配置OMA环境)"];
+        
+        // 核心流程（实线）
+        deploykit_backend -> oma [label="调用→安装系统基础包"];
+        
+        // 辅助工具（虚线）
+        deploykit_backend -> aoscbootstrap [label="调用→初始化目录/源配置" style=dashed];
+        aoscbootstrap -> oma_apt_sources [label="生成环境→配置APT源" style=dashed];
+    }
+}
